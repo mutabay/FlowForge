@@ -1,0 +1,39 @@
+version: "3.9"
+
+services:
+  api:
+    build:
+      context: ../apps/api
+      dockerfile: Dockerfile
+    container_name: flowforge-api
+    environment:
+      ConnectionStrings__DefaultConnection: 
+        "Host=postgres;Port=5432;Database=flowforge;Username=flowforge;Password=flowforge_dev"
+      RabbitMQ__Host: rabbitmq
+      RabbitMQ__Username: flowforge
+      RabbitMQ__Password: flowforge_dev
+    ports:
+      - "5000:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+  
+  worker:
+    build:
+      context: ../apps/worker
+      dockerfile: Dockerfile
+    container_name: flowforge-worker
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/flowforge
+      SPRING_DATASOURCE_USERNAME: flowforge
+      SPRING_DATASOURCE_PASSWORD: flowforge_dev
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_USERNAME: flowforge
+      SPRING_RABBITMQ_PASSWORD: flowforge_dev
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
