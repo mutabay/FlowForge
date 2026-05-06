@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "P5jFIsd98ow=",
+  "dgSpecHash": "mSG8nM7+5wo=",
   "success": true,
   "projectFilePath": "C:\\Users\\bayram\\Desktop\\Training\\SW\\FlowForge\\FlowForge\\apps\\api\\FlowForge.Api\\FlowForge.Api.csproj",
   "expectedPackageFiles": [
@@ -15,7 +15,7 @@
     "C:\\Users\\bayram\\.nuget\\packages\\microsoft.openapi\\2.0.0\\microsoft.openapi.2.0.0.nupkg.sha512",
     "C:\\Users\\bayram\\.nuget\\packages\\npgsql\\10.0.2\\npgsql.10.0.2.nupkg.sha512",
     "C:\\Users\\bayram\\.nuget\\packages\\npgsql.entityframeworkcore.postgresql\\10.0.1\\npgsql.entityframeworkcore.postgresql.10.0.1.nupkg.sha512",
-    "C:\\Users\\bayram\\.nuget\\packages\\rabbitmq.client\\7.2.1\\rabbitmq.client.7.2.1.nupkg.sha512"
+    "C:\\Users\\bayram\\.nuget\\packages\\rabbitmq.client\\6.4.0\\rabbitmq.client.6.4.0.nupkg.sha512"
   ],
   "logs": []
 }
