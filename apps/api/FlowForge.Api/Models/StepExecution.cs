@@ -4,7 +4,7 @@ namespace FlowForge.Api.Models;
 public class StepExecution
 {
     public Guid Id { get; set; }
-    public Guid ExecutionId { get; set; }
+    public Guid WorkflowExecutionId { get; set; }
     public Guid StepId { get; set; }
     public string Status { get; set; } = "pending";
     public string? Input { get; set; }

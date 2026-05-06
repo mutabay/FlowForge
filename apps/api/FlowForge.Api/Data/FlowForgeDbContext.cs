@@ -65,14 +65,14 @@ public class FlowForgeDbContext : DbContext
             entity.HasOne(e => e.SourceStep)
                 .WithMany()
                 .HasForeignKey(e => e.SourceStepId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasOne(e => e.TargetStep)
                 .WithMany()
                 .HasForeignKey(e => e.TargetStepId)
-                .OnDelete(DeleteBehavior.Restrict); 
+                .OnDelete(DeleteBehavior.Cascade); 
             
-            entity.HasIndex(e => new { e.WorkflowId, e.SourceStepId, e.TargetStepId }).IsUnique();
+            entity.HasIndex(e => new { e.SourceStepId, e.TargetStepId }).IsUnique();
         });
 
         modelBuilder.Entity<WorkflowTrigger>(entity =>
@@ -99,14 +99,63 @@ public class FlowForgeDbContext : DbContext
             entity.Property(e => e.WorkflowId).HasColumnName("workflow_id");
             entity.Property(e => e.Status).HasColumnName("status").HasMaxLength(20).IsRequired();
             entity.Property(e => e.StartedAt).HasColumnName("started_at");
-            entity.Property(e => e.CompletedAt).HasColumnName("completed_at");
+            entity.Property(e => e.FinishedAt).HasColumnName("finished_at");
+            entity.Property(e => e.ErrorMessage).HasColumnName("error_message");
+            entity.Property(e => e.CreatedAt).HasColumnName("created_at");
 
             entity.HasOne(e => e.Workflow)
-                .WithMany(w => w.Executions)
+                .WithMany(w => w.WorkflowExecutions)
                 .HasForeignKey(e => e.WorkflowId)
                 .OnDelete(DeleteBehavior.Cascade);
         });
 
-    }
+        modelBuilder.Entity<StepExecution>(entity =>
+        {
+            entity.ToTable("step_executions");
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.WorkflowExecutionId).HasColumnName("execution_id"); // TODO: Consider renaming to workflow_execution_id for consistency
+            entity.Property(e => e.StepId).HasColumnName("step_id");
+            entity.Property(e => e.Status).HasColumnName("status").HasMaxLength(20);
+            entity.Property(e => e.Input).HasColumnName("input").HasColumnType("jsonb");
+            entity.Property(e => e.Output).HasColumnName("output").HasColumnType("jsonb");
+            entity.Property(e => e.ErrorMessage).HasColumnName("error_message");
+            entity.Property(e => e.StartedAt).HasColumnName("started_at");
+            entity.Property(e => e.FinishedAt).HasColumnName("finished_at");
+            entity.Property(e => e.RetryCount).HasColumnName("retry_count");
 
+            entity.HasOne(e => e.WorkflowExecution)
+                .WithMany(w => w.StepExecutions)
+                .HasForeignKey(e => e.WorkflowExecutionId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(e => e.Step)
+                .WithMany()
+                .HasForeignKey(e => e.StepId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<ExecutionLog>(entity =>
+        {
+            entity.ToTable("execution_logs");
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.WorkflowExecutionId).HasColumnName("execution_id");
+            entity.Property(e => e.StepId).HasColumnName("step_id");
+            entity.Property(e => e.Level).HasColumnName("level").HasMaxLength(10);
+            entity.Property(e => e.Message).HasColumnName("message").IsRequired();
+            entity.Property(e => e.Metadata).HasColumnName("metadata").HasColumnType("jsonb");
+            entity.Property(e => e.CreatedAt).HasColumnName("created_at");
+
+            entity.HasOne(e => e.WorkflowExecution)
+                .WithMany(w => w.Logs)
+                .HasForeignKey(e => e.WorkflowExecutionId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(e => e.Step)
+                .WithMany()
+                .HasForeignKey(e => e.StepId)
+                .OnDelete(DeleteBehavior.SetNull);
+        });
+    }
 }

@@ -13,5 +13,5 @@ public class Workflow
     public ICollection<WorkflowStep> Steps { get; set; } = new List<WorkflowStep>();
     public ICollection<WorkflowEdge> Edges { get; set; } = new List<WorkflowEdge>();
     public ICollection<WorkflowTrigger> Triggers { get; set; } = new List<WorkflowTrigger>();
-    public ICollection<WorkflowExecution> Executions { get; set; } = new List<WorkflowExecution>();
+    public ICollection<WorkflowExecution> WorkflowExecutions { get; set; } = new List<WorkflowExecution>();
 }
