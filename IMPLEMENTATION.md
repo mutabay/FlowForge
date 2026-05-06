@@ -326,7 +326,7 @@ workflow_steps 1──* step_executions
 
 ---
 
-# 5. Backend API (C# / .NET 8)
+# 5. Backend API (C# / .NET 10)
 
 ## 5.1 Create the Project
 
@@ -339,7 +339,6 @@ cd FlowForge.Api
 dotnet add package Npgsql.EntityFrameworkCore.PostgreSQL
 dotnet add package FluentValidation.AspNetCore
 dotnet add package RabbitMQ.Client
-dotnet add package Swashbuckle.AspNetCore
 ```
 
 ## 5.2 Project Structure

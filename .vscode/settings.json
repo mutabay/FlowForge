@@ -1,0 +1,15 @@
+{
+    "sqltools.connections": [
+        {
+            "ssh": "Disabled",
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "name": "Flowforge DB",
+            "database": "flowforge",
+            "username": "flowforge",
+            "password": "flowforge_dev"
+        }
+    ]
+}
