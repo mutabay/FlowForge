@@ -11,7 +11,7 @@
           "FluentValidation.AspNetCore": "11.3.1",
           "Microsoft.AspNetCore.OpenApi": "10.0.7",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "10.0.1",
-          "RabbitMQ.Client": "7.2.1"
+          "RabbitMQ.Client": "6.4.0"
         },
         "runtime": {
           "FlowForge.Api.dll": {}
@@ -118,11 +118,11 @@
           }
         }
       },
-      "RabbitMQ.Client/7.2.1": {
+      "RabbitMQ.Client/6.4.0": {
         "runtime": {
-          "lib/net8.0/RabbitMQ.Client.dll": {
-            "assemblyVersion": "7.0.0.0",
-            "fileVersion": "7.2.1.0"
+          "lib/netstandard2.0/RabbitMQ.Client.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.4.0.0"
           }
         }
       }
@@ -204,12 +204,12 @@
       "path": "npgsql.entityframeworkcore.postgresql/10.0.1",
       "hashPath": "npgsql.entityframeworkcore.postgresql.10.0.1.nupkg.sha512"
     },
-    "RabbitMQ.Client/7.2.1": {
+    "RabbitMQ.Client/6.4.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-YKXEfg9fVQiTKgZlvIhAfPSFaamEgi8DsQmisCH0IAsU4FYLrtoguDrDj6JtJVGUt40QPnBLRH6fTQcAC4qsOg==",
-      "path": "rabbitmq.client/7.2.1",
-      "hashPath": "rabbitmq.client.7.2.1.nupkg.sha512"
+      "sha512": "sha512-1znR1gGU+xYVSpO5z8nQolcUKA/yydnxQn7Ug9+RUXxTSLMm/eE58VKGwahPBjELXvDnX0k/kBrAitFLRjx9LA==",
+      "path": "rabbitmq.client/6.4.0",
+      "hashPath": "rabbitmq.client.6.4.0.nupkg.sha512"
     }
   }
 }

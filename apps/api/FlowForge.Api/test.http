@@ -1,0 +1,78 @@
+### 1. Health Check
+GET http://localhost:5151/api/health
+
+###########################################################################
+
+### 2. Create a Workflow
+POST http://localhost:5151/api/workflows
+Content-Type: application/json
+
+{
+  "name": "Test Workflow",
+  "description": "First workflow for testing",
+  "steps": [
+    { "tempId": "s1", "name": "Step One", "type": "http_request", "config": { "url": "https://example.com" }, "positionX": 0, "positionY": 0 },
+    { "tempId": "s2", "name": "Step Two", "type": "transform_json", "config": {}, "positionX": 200, "positionY": 0 }
+  ],
+  "edges": [
+    { "sourceTempId": "s1", "targetTempId": "s2" }
+  ],
+  "trigger": { "type": "manual", "config": {} }
+}
+
+###########################################################################
+
+### 3. List All Workflows
+GET http://localhost:5151/api/workflows
+
+###########################################################################
+
+### 4. Get Workflow by ID (copy the ID from response #2)
+### Replace {id} with the actual UUID from step 2
+GET http://localhost:5151/api/workflows/REPLACE_WITH_WORKFLOW_ID
+
+###########################################################################
+
+### 5. Update Workflow (copy the ID from response #2)
+PUT http://localhost:5151/api/workflows/REPLACE_WITH_WORKFLOW_ID
+Content-Type: application/json
+
+{
+  "name": "Updated Test Workflow",
+  "description": "Updated description",
+  "steps": [
+    { "tempId": "s1", "name": "Fetch Data", "type": "http_request", "config": { "url": "https://api.example.com/data" }, "positionX": 0, "positionY": 0 }
+  ],
+  "edges": [],
+  "trigger": { "type": "manual", "config": {} }
+}
+
+###########################################################################
+
+### 6. Run Workflow (copy the ID from response #2)
+POST http://localhost:5151/api/workflows/REPLACE_WITH_WORKFLOW_ID/run
+
+###########################################################################
+
+### 7. List All Executions
+GET http://localhost:5151/api/executions
+
+###########################################################################
+
+### 8. Get Execution by ID (copy the ID from response #6)
+GET http://localhost:5151/api/executions/REPLACE_WITH_EXECUTION_ID
+
+###########################################################################
+
+### 9. Get Workflow Executions (copy the workflow ID from response #2)
+GET http://localhost:5151/api/workflows/REPLACE_WITH_WORKFLOW_ID/executions
+
+###########################################################################
+
+### 10. Delete Workflow (copy the ID from response #2)
+DELETE http://localhost:5151/api/workflows/REPLACE_WITH_WORKFLOW_ID
+
+###########################################################################
+
+### 11. Verify Deletion - Get deleted workflow (should return 404)
+GET http://localhost:5151/api/workflows/REPLACE_WITH_WORKFLOW_ID
