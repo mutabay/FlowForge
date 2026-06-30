@@ -67,7 +67,7 @@ public class WorkflowEngine {
                 // Mark step as success
                 stepExecutionRepo.updateStepExecution(stepExecId, "success", output, null, Instant.now());
                 logService.log(executionId, step.getId(), "info", "Step completed successfully");
-
+                
                 previousOutput = output;
             } catch (Exception e) {
                 log.error("Step execution failed: step={}, error={}", step.getName(), e.getMessage());

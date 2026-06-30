@@ -3,6 +3,8 @@ using FlowForge.Api.Configuration;
 using FlowForge.Api.Data;
 using FlowForge.Api.Services;
 using FlowForge.Api.Middleware;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +28,8 @@ builder.Services.AddScoped<IExecutionService, ExecutionService>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
 // CORS
 builder.Services.AddCors(options =>

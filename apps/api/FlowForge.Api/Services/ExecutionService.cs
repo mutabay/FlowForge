@@ -9,16 +9,19 @@ public class ExecutionService : IExecutionService
 {
     private readonly FlowForgeDbContext _db;
     private readonly IRabbitMqPublisher _publisher;
+    private readonly ILogger<ExecutionService> _logger;
 
-    public ExecutionService(FlowForgeDbContext db, IRabbitMqPublisher publisher)
+    public ExecutionService(FlowForgeDbContext db, IRabbitMqPublisher publisher, ILogger<ExecutionService> logger)
     {
         _db = db;
         _publisher = publisher;
+        _logger = logger;
     }
 
 
     public async Task<WorkflowExecutionResponse> RunWorkflowAsync(Guid workflowId)
     {
+         _logger.LogInformation("Running workflow: {WorkflowId}", workflowId);
         var workflow = await _db.Workflows.FindAsync(workflowId);
         if (workflow == null) throw new KeyNotFoundException($"Workflow {workflowId} not found");
 
@@ -32,6 +35,7 @@ public class ExecutionService : IExecutionService
         _db.WorkflowExecutions.Add(workflowExecution);
         await _db.SaveChangesAsync();
 
+        _logger.LogInformation("Execution created: {ExecutionId}, publishing to RabbitMQ", workflowExecution.Id);
         // Publish to RabbitMQ for worker to pick up 
         await _publisher.PublishExecutionMessage(workflowExecution.Id, workflowId);
 
@@ -45,6 +49,7 @@ public class ExecutionService : IExecutionService
             .OrderByDescending(e => e.CreatedAt)
             .Take(50)
             .ToListAsync();
+        _logger.LogInformation("Retrieved {Count} workflow executions", workflowExecutions.Count);
         return workflowExecutions.Select(MapToResponse).ToList();
     }
     public async Task<WorkflowExecutionResponse?> GetByIdAsync(Guid id)

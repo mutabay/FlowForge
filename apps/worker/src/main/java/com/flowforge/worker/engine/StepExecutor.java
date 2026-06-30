@@ -3,6 +3,9 @@ package com.flowforge.worker.engine;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flowforge.worker.model.StepData;
+
+import io.github.resilience4j.retry.annotation.Retry;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,6 +36,7 @@ public class StepExecutor {
                 .build();
     }
 
+    @Retry(name = "stepExecution", fallbackMethod = "executeFallback")
     public String execute(StepData step, String previousOutput) throws Exception {
         
         JsonNode config = objectMapper.readTree(step.getConfig());
@@ -44,6 +48,12 @@ public class StepExecutor {
             case "db_query" -> executeDbQuery(config, previousOutput);
             default -> throw new IllegalArgumentException("Unknown step type: " + step.getType());        
         };
+    }
+
+    private String executeFallback(StepData step, String previousOutput, Exception e) throws Exception 
+    {
+        throw new RuntimeException(
+            "Step '" + step.getName() + "' failed after retries: " + e.getMessage(), e);
     }
 
     private String executeHttpRequest(JsonNode config, String previousOutput) throws Exception {

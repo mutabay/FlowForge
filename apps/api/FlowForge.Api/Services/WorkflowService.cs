@@ -9,10 +9,12 @@ namespace FlowForge.Api.Services;
 public class WorkflowService : IWorkflowService
 {
     private readonly FlowForgeDbContext _db;
+    private readonly ILogger<WorkflowService> _logger;
 
-    public WorkflowService(FlowForgeDbContext db)
+    public WorkflowService(FlowForgeDbContext db, ILogger<WorkflowService> logger)
     {
         _db = db;
+        _logger = logger;
     }
 
     public async Task<List<WorkflowResponse>> GetAllAsync()
@@ -38,6 +40,9 @@ public class WorkflowService : IWorkflowService
 
     public async Task<WorkflowResponse> CreateAsync(CreateWorkflowRequest request)
     {
+        _logger.LogInformation("Creating workflow: {Name} with {StepCount} steps",
+            request.Name, request.Steps.Count);
+
         var workflow = new Workflow
         {
             Name = request.Name,
@@ -156,11 +161,17 @@ public class WorkflowService : IWorkflowService
 
     public async Task<bool> DeleteAsync(Guid id)
     {
+        _logger.LogInformation("Deleting workflow: {WorkflowId}", id);
         var workflow = await _db.Workflows.FindAsync(id);
-        if (workflow == null) return false;
+        if (workflow == null) 
+        {
+            _logger.LogWarning("Workflow not found for deletion: {WorkflowId}", id);
+            return false;
+        }
 
         _db.Workflows.Remove(workflow);
         await _db.SaveChangesAsync();
+        _logger.LogInformation("Workflow deleted: {WorkflowId}", id);
         return true;
     }
 
