@@ -1,7 +1,7 @@
 package com.flowforge.worker.engine;
 
-import tools.jackson.databind.JsonNode;
-import tools.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flowforge.worker.model.StepData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,8 +47,8 @@ public class StepExecutor {
     }
 
     private String executeHttpRequest(JsonNode config, String previousOutput) throws Exception {
-        String method = config.has("method") ? config.get("method").asString() : "GET";
-        String url = config.get("url").asString();
+        String method = config.has("method") ? config.get("method").asText() : "GET";
+        String url = config.get("url").asText();
         
         HttpRequest.Builder builder = HttpRequest.newBuilder()
                 .uri(URI.create(url))
@@ -85,7 +85,7 @@ public class StepExecutor {
         }
 
         // Simple field extraction / mapping
-        String expression = config.has("expression") ? config.get("expression").asString() : null;
+        String expression = config.has("expression") ? config.get("expression").asText() : null;
 
         if (expression != null) {
             JsonNode input = objectMapper.readTree(previousOutput);
@@ -114,7 +114,7 @@ public class StepExecutor {
                 Files.writeString(inputFile, previousOutput);
             }
             else if (config.has("input_file")) {
-                inputFile = Path.of(config.get("input_file").asString());
+                inputFile = Path.of(config.get("input_file").asText());
             }
 
             // Call C++ processor

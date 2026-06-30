@@ -55,7 +55,7 @@ public class WorkflowEngine {
 
             try {
                 // Create step execution record
-                stepExecRepo.insertStepExecution(stepExecId, executionId, step.getId(),
+                stepExecutionRepo.insertStepExecution(stepExecId, executionId, step.getId(),
                         "running", previousOutput, Instant.now());
 
                 logService.log(executionId, step.getId(), "info",
@@ -65,13 +65,13 @@ public class WorkflowEngine {
                 String output = stepExecutor.execute(step, previousOutput);
 
                 // Mark step as success
-                stepExecRepo.updateStepExecution(stepExecId, "success", output, null, Instant.now());
+                stepExecutionRepo.updateStepExecution(stepExecId, "success", output, null, Instant.now());
                 logService.log(executionId, step.getId(), "info", "Step completed successfully");
 
                 previousOutput = output;
             } catch (Exception e) {
                 log.error("Step execution failed: step={}, error={}", step.getName(), e.getMessage());
-                stepExecRepo.updateStepExecution(stepExecId, "failed", null, e.getMessage(), Instant.now());
+                stepExecutionRepo.updateStepExecution(stepExecId, "failed", null, e.getMessage(), Instant.now());
                 logService.log(executionId, step.getId(), "error",
                         "Step failed: " + e.getMessage());
 

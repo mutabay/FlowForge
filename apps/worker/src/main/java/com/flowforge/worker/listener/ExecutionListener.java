@@ -1,8 +1,8 @@
 package com.flowforge.worker.listener;
 
+import com.flowforge.worker.config.RabbitConfig;
 import com.flowforge.worker.engine.WorkflowEngine;
 import com.flowforge.worker.model.ExecutionMessage;
-import com.flowforge.worker.model.WorkflowData;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +18,7 @@ public class ExecutionListener {
         this.engine = engine;
     }
 
-    @RabbitListener(queues = "flowforge.executions.queue")
+    @RabbitListener(queues = RabbitConfig.EXECUTION_QUEUE)
     public void onMessage(ExecutionMessage message) {
         log.info("Received execution request: executionId={}, workflowId={}",
          message.executionId(), message.workflowId());

@@ -10,9 +10,9 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class RabbitConfig {
-    public static final String EXECUTION_QUEUE = "execution_queue";
-    public static final String EXECUTION_EXCHANGE = "execution_exchange";
-    public static final String EXECUTION_ROUTING_KEY = "execution_routing_key";
+    public static final String EXECUTION_QUEUE = "flowforge.executions.queue";
+    public static final String EXECUTION_EXCHANGE = "flowforge.executions";
+    public static final String EXECUTION_ROUTING_KEY = "execution.start";
 
     @Bean
     public Queue executionQueue() {
