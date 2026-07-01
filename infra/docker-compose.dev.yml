@@ -3,7 +3,7 @@ version: "3.9"
 services:
   api:
     build:
-      context: ../apps/api
+      context: ../apps/api/FlowForge.Api
       dockerfile: Dockerfile
     container_name: flowforge-api
     environment:

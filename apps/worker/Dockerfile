@@ -7,7 +7,6 @@ RUN mvn package -DskipTests
 
 FROM eclipse-temurin:21-jre-alpine AS runtime
 WORKDIR /app
-COPY --from=build /app/target/worker-1.0.0.jar app.jar
-COPY --from=cpp-processor /app/processor /opt/flowforge/processor
+COPY --from=build /app/target/worker-0.0.1-SNAPSHOT.jar app.jar
 EXPOSE 8081
 ENTRYPOINT ["java", "-jar", "app.jar"]

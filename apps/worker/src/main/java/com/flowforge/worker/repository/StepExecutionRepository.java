@@ -1,5 +1,6 @@
 package com.flowforge.worker.repository;
 
+import com.flowforge.worker.model.StepExecutionData;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
@@ -8,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Instant;
 import java.util.UUID;
 
-public interface StepExecutionRepository extends Repository<Object, UUID> {
+public interface StepExecutionRepository extends Repository<StepExecutionData, UUID> {
 
     @Modifying
     @Transactional
