@@ -33,21 +33,11 @@ export interface Execution {
     finishedAt?: string;
     errorMessage?: string;
     createdAt: string;
-    steps: StepExecution[];
+    stepExecutions: StepExecution[];
     logs: ExecutionLog[];
 }
 
 export type ExecutionStatus = 'pending' | 'running' | 'success' | 'failed' | 'cancelled';
-
-
-export interface StepExecution {
-    id: string;
-    stepId: string;
-    status: ExecutionStatus;
-    output?: unknown;
-    errorMessage?: string;
-    retryCount: number;
-}
 
 export interface StepExecution {
     id: string;

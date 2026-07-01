@@ -4,6 +4,9 @@ import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.TopicExchange;
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+import org.springframework.amqp.support.converter.DefaultClassMapper;
+import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -29,4 +32,14 @@ public class RabbitConfig {
         return BindingBuilder.bind(executionQueue).to(executionExchange).with(EXECUTION_ROUTING_KEY);
     }
 
+    @Bean
+    public MessageConverter jsonMessageConverter() {
+        Jackson2JsonMessageConverter converter = new Jackson2JsonMessageConverter();
+        // Don't require __TypeId__ header from non-Java publishers
+        converter.setAlwaysConvertToInferredType(true);
+        DefaultClassMapper classMapper = new DefaultClassMapper();
+        classMapper.setDefaultType(com.flowforge.worker.model.ExecutionMessage.class);
+        converter.setClassMapper(classMapper);
+        return converter;
+    }
 }

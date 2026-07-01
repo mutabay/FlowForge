@@ -56,7 +56,7 @@ export default function ExecutionList({ executions, onSelect }: ExecutionListPro
                                 {execution.finishedAt ? new Date(execution.finishedAt).toLocaleString() : '-'}
                             </td>
                             <td className="px-6 py-4 text-gray-600">
-                                {execution.steps.length}
+                                {execution.stepExecutions.length}
                             </td>
                         </tr>
                     ))}

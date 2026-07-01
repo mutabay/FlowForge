@@ -29,7 +29,7 @@ public class RabbitMqPublisher : IRabbitMqPublisher, IDisposable
         _connection = factory.CreateConnection();
         _channel = _connection.CreateModel();
 
-        _channel.ExchangeDeclare(_settings.ExchangeName, ExchangeType.Direct, durable: true);
+        _channel.ExchangeDeclare(_settings.ExchangeName, ExchangeType.Topic, durable: true);
         _channel.QueueDeclare(_settings.QueueName, durable: true, exclusive: false, autoDelete: false);
         _channel.QueueBind(_settings.QueueName, _settings.ExchangeName, _settings.RoutingKey);
         
@@ -41,7 +41,8 @@ public class RabbitMqPublisher : IRabbitMqPublisher, IDisposable
         _logger.LogInformation("Publishing execution message: {ExecutionId}", executionId);
         var message = new { ExecutionId = executionId, WorkflowId = workflowId, Timestamp = DateTime.UtcNow};
         
-        var body = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(message));
+        var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+        var body = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(message, options));
 
         var properties = _channel.CreateBasicProperties();
         properties.Persistent = true;

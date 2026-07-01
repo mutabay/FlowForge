@@ -1,5 +1,6 @@
 package com.flowforge.worker.engine;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flowforge.worker.model.*;
 import com.flowforge.worker.repository.*;
 import com.flowforge.worker.service.LogService;
@@ -14,6 +15,7 @@ import java.util.*;
 @Service
 public class WorkflowEngine {
     private static final Logger log = LoggerFactory.getLogger(WorkflowEngine.class);
+    private static final ObjectMapper objectMapper = new ObjectMapper();
     
     private final WorkflowRepository workflowRepo;
     private final ExecutionRepository executionRepo;
@@ -56,7 +58,7 @@ public class WorkflowEngine {
             try {
                 // Create step execution record
                 stepExecutionRepo.insertStepExecution(stepExecId, executionId, step.getId(),
-                        "running", previousOutput, Instant.now());
+                        "running", ensureJson(previousOutput), Instant.now());
 
                 logService.log(executionId, step.getId(), "info",
                         "Executing step: " + step.getName() + " (type: " + step.getType() + ")");
@@ -65,7 +67,7 @@ public class WorkflowEngine {
                 String output = stepExecutor.execute(step, previousOutput);
 
                 // Mark step as success
-                stepExecutionRepo.updateStepExecution(stepExecId, "success", output, null, Instant.now());
+                stepExecutionRepo.updateStepExecution(stepExecId, "success", ensureJson(output), null, Instant.now());
                 logService.log(executionId, step.getId(), "info", "Step completed successfully");
                 
                 previousOutput = output;
@@ -85,6 +87,32 @@ public class WorkflowEngine {
         // Mark execution as success
         executionRepo.updateStatus(executionId, "success", null, Instant.now(), null);
         logService.log(executionId, null, "info", "Execution completed successfully");
+    }
+
+    /**
+     * Ensures a string is valid JSON for storage in jsonb columns.
+     * If null, returns null. If already valid JSON, returns as-is.
+     * Otherwise wraps the raw string as a JSON string value.
+     */
+    private String ensureJson(String value) {
+        if (value == null) return null;
+        String trimmed = value.trim();
+        // Check if it's already valid JSON (starts with {, [, ", or is a number/boolean/null)
+        if (trimmed.startsWith("{") || trimmed.startsWith("[") || trimmed.startsWith("\"")
+                || trimmed.equals("null") || trimmed.equals("true") || trimmed.equals("false")) {
+            try {
+                objectMapper.readTree(value);
+                return value;
+            } catch (Exception e) {
+                // Not valid JSON, wrap it
+            }
+        }
+        // Wrap as a JSON string
+        try {
+            return objectMapper.writeValueAsString(value);
+        } catch (Exception e) {
+            return "\"\"";
+        }
     }
 
     private List<StepData> topologicalSort(List<StepData> steps, List<EdgeData> edges) {

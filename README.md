@@ -20,9 +20,20 @@ Users design workflows visually, trigger execution with a click, and monitor res
 
 ## Demo
 
-> 📸 *Screenshots and demo GIF will be added here.*
->
-> To add: capture the workflow editor canvas, an execution in progress, and the log viewer.
+### Dashboard
+![Dashboard](img/Dashboard.png)
+
+### Workflow Editor
+![Workflow Editor](img/workflow-edit.png)
+
+### Step Configuration — HTTP Request
+![Configure HTTP Step](img/configure-step-http.png)
+
+### Step Configuration — SQL Query
+![Configure SQL Step](img/configure-step-sql.png)
+
+### Execution Results
+![Executions](img/executions.png)
 
 ---
 
